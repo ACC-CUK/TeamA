@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Page</title>
+  <!-- jQuery를 사용하기 위한 CDN 추가 -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+<form id="login-form">
+  <label for="userEmail">User Email</label>
+  <input type="text" name="userEmail" id="userEmail" placeholder="User Email" />
+  <label for="password">Password</label>
+  <input type="password" name="password" id="password" placeholder="Password" />
+  <!-- 버튼 클릭 시 login 함수 호출 -->
+  <button type="button" class="btn btn-primary" id="btn-login" onclick="login()">Submit</button>
+  <!-- CSRF 토큰 추가 -->
+  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+</form>
+
+<!-- 에러 메시지 표시 -->
+<div id="error-message" style="color: red;"></div>
+
+<script>
+  // login 함수 정의
+  function login() {
+    var data = {
+      userEmail: $('#userEmail').val(),
+      password: $('#password').val(),
+    };
+
+    // AJAX 요청 설정
+    $.ajax({
+      type: 'POST',
+      url: '/users/login',
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(data),
+      success: function () {
+        alert('로그인 되었습니다.');
+        window.location.href = '/home';
+      },
+      error: function (error) {
+        $('#error-message').text(error.responseJSON.error);
+      }
+    });
+  }
+</script>
+</body>
+</html>
