@@ -1,12 +1,11 @@
 package ACCC.ACCCproject.service;
 
-import static org.springframework.security.core.context.SecurityContextHolder.*;
-
-import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.Random;
 
 import ACCC.ACCCproject.controller.dto.GetEmailRes;
+import ACCC.ACCCproject.controller.dto.PostRegisterReq;
+import ACCC.ACCCproject.controller.dto.PostRegisterRes;
 import ACCC.ACCCproject.model.User;
 import ACCC.ACCCproject.repository.UserRepository;
 
@@ -77,5 +76,24 @@ public class UserService {
             sb.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
         }
         return sb.toString();
+    }
+
+    public PostRegisterRes register(PostRegisterReq data) {
+        User user = userRepository.findByUserEmail(data.getEmail());
+        validCode(user, data.getRegistCode());
+        user.setPassword(passwordEncoder.encode(data.getPassword()));
+        user.setUserName(data.getUserName());
+        user.setGender(data.getGender());
+        user.setDetail(data.getDetail());
+        user.setPhoneNumber(data.getPhoneNumber());
+        user.setDepartmentNumber(data.getDepartmentNumber());
+        userRepository.save(user);
+        return new PostRegisterRes(user.getUserEmail());
+    }
+
+    private void validCode(User user, String registCode) {
+        if(!user.getRegistCode().equals(registCode)){
+            throw new RuntimeException("Invalid code");
+        }
     }
 }

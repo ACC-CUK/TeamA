@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ACCC.ACCCproject.controller.dto.GetEmailRes;
+import ACCC.ACCCproject.controller.dto.PostRegisterReq;
+import ACCC.ACCCproject.controller.dto.PostRegisterRes;
 import ACCC.ACCCproject.service.UserService;
 
 import java.util.HashMap;
@@ -37,6 +39,11 @@ public class LoginController {
     @GetMapping("/email")
     public ResponseEntity<GetEmailRes> getEmailPage(@RequestParam(required = false) String email) {
         return new ResponseEntity<>(userService.getEmailCode(email), HttpStatus.OK);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<PostRegisterRes> getEmailPage(@RequestBody PostRegisterReq data) {
+        return new ResponseEntity<>(userService.register(data), HttpStatus.OK);
     }
 
     @PostMapping("/users/login")
