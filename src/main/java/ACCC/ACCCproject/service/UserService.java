@@ -8,7 +8,8 @@ import ACCC.ACCCproject.controller.dto.PostRegisterReq;
 import ACCC.ACCCproject.controller.dto.PostRegisterRes;
 import ACCC.ACCCproject.model.User;
 import ACCC.ACCCproject.repository.UserRepository;
-import ACCC.ACCCproject.dto.GetUserDto;
+import ACCC.ACCCproject.controller.dto.GetUserDto;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
