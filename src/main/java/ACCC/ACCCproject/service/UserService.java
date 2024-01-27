@@ -8,11 +8,15 @@ import ACCC.ACCCproject.controller.dto.PostRegisterReq;
 import ACCC.ACCCproject.controller.dto.PostRegisterRes;
 import ACCC.ACCCproject.model.User;
 import ACCC.ACCCproject.repository.UserRepository;
+import ACCC.ACCCproject.dto.GetUserDto;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -20,6 +24,7 @@ public class UserService {
     private final JavaMailSender emailSender;
     private final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private final Random random = new Random();
+
 
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, JavaMailSender emailSender){
         this.userRepository = userRepository;
@@ -94,6 +99,23 @@ public class UserService {
     private void validCode(User user, String registCode) {
         if(!user.getRegistCode().equals(registCode)){
             throw new RuntimeException("Invalid code");
+        }
+    }
+
+    public ResponseEntity<GetUserDto> getRegisterCode(String registCode) {
+        User user = userRepository.findByRegistCode(registCode);
+        if (user != null) {
+            //dto로 변환
+            GetUserDto userDto = new GetUserDto(user);
+
+
+            //유저 output 찍기
+            System.out.println(userDto);
+            //로그 찍기
+            System.out.println("유저 찾음");
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
